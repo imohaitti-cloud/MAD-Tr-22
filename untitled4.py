@@ -8,7 +8,7 @@ from threading import Thread
 # ==========================
 # إعداد البوت
 # ==========================
-TOKEN = "8842616064:AAGfjaJ5DIEDKFQywnjgRC7hFnWSWyAgHkI"
+TOKEN = "8842616064:AAEwDgWLmufrPcsvOoB-LNXIOL2O2dXehB8"
 bot = telebot.TeleBot(TOKEN)
 
 # ==========================
