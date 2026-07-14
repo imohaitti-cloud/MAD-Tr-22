@@ -4,6 +4,7 @@ from telebot import types
 from tradingview_ta import TA_Handler, Interval
 from flask import Flask
 from threading import Thread
+import datetime
 
 # ==========================
 # إعداد البوت
@@ -12,7 +13,7 @@ TOKEN = "8842616064:AAEwDgWLmufrPcsvOoB-LNXIOL2O2dXehB8"
 bot = telebot.TeleBot(TOKEN)
 
 # ==========================
-# إعداد خادم الويب (للحفاظ على التشغيل)
+# إعداد خادم الويب
 # ==========================
 app = Flask(__name__)
 
@@ -49,8 +50,8 @@ def get_analysis(symbol):
         )
         analysis = handler.get_analysis()
         result = analysis.summary['RECOMMENDATION']
-        if result == "BUY": return "🟢 BUY"
-        elif result == "SELL": return "🔴 SELL"
+        if result == "BUY": return "🟢 CALL UP ⬆️"
+        elif result == "SELL": return "🔴 PUT DOWN ⬇️"
         else: return "⚪ NEUTRAL"
     except Exception:
         return "❌ غير متاح حالياً"
@@ -69,15 +70,17 @@ def start(message):
 def callback(call):
     pair = call.data
     signal = get_analysis(pair)
-    text = f"📊 MAD Tr Signal\n\n📈 Pair: {pair}\n\n🎯 Signal: {signal}\n\n⏱ Timeframe: 1 Minute\n\n🌍 Market: Real Forex"
+    # حساب وقت الصفقة (الوقت الحالي + دقيقة)
+    next_time = (datetime.datetime.now() + datetime.timedelta(minutes=1)).strftime("%I:%M %p")
+    
+    # تنسيق الإشارة كما في الصورة
+    text = f"📊 {pair}\n⏰ {next_time}\n⏳ 1 Minutes\n🎯 Signal: {signal}"
+    
     bot.edit_message_text(text, call.message.chat.id, call.message.message_id)
 
 # ==========================
-# التشغيل المتوازي
+# التشغيل
 # ==========================
 if __name__ == "__main__":
-    # تشغيل خادم الويب في الخلفية
     Thread(target=run_web).start()
-    # تشغيل البوت
-    print("🚀 MAD Tr Real Forex Bot Running...")
     bot.infinity_polling()
