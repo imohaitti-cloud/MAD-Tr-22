@@ -8,10 +8,8 @@ from threading import Thread
 TOKEN = "8842616064:AAGD9riGS8YXB7P_zOOUBRyBY-uTnzvqr10"
 bot = telebot.TeleBot(TOKEN)
 
-# قائمة الأسواق
 SYMBOLS_LIST = ["AUDCHF", "CADCHF", "CHFJPY", "EURUSD", "EURJPY", "AUDUSD", "USDCHF", "EURAUD", "AUDJPY", "CADJPY", "EURCHF", "USDJPY", "AUDCAD"]
 
-# دالة التحليل
 def get_analysis(symbol):
     try:
         handler = TA_Handler(symbol=symbol, screener="forex", exchange="FOREX", interval=Interval.INTERVAL_1_MINUTE)
@@ -21,7 +19,7 @@ def get_analysis(symbol):
         if osc == "BUY" and mov == "BUY": return "🟢 CALL UP ⬆️"
         elif osc == "SELL" and mov == "SELL": return "🔴 PUT DOWN ⬇️"
         else: return "⚪ NEUTRAL"
-    except: return "⏳ يرجى الانتظار..."
+    except: return "⏳ جاري التحديث..."
 
 app = Flask(__name__)
 @app.route('/')
